@@ -10,7 +10,7 @@ logoutButton.action = () => {
 		} else {
 			console.error(`${response.error}`);
 		};
-	};
+	});
 };
 
 //Профиль текущего пользователя
@@ -20,7 +20,8 @@ let current = ApiConnector.current((response) => {  // response ???
 	} else {
 		console.error('Ошибка вывода профиля');
 	};
-};
+});
+
 
 
 
@@ -39,7 +40,7 @@ function getCurrencyRate() {
 		} else {
 			console.error("Ошибка получения курсов валют");
 		};
-	};
+	});
 };
 
 getCurrencyRate();
@@ -58,8 +59,8 @@ moneyManager.addMoneyCallback = ((data) => {
 		} else {
 			moneyManager.setMessage(false, `Произошла ошибка ${response.error}`);
 		};
-	};
-};
+	});
+});
 
 moneyManager.conversionMoneyCallback = ((data) => {
 	ApiConnector.convertMoney(data, (response) => {
@@ -69,8 +70,8 @@ moneyManager.conversionMoneyCallback = ((data) => {
 		} else {
 			moneyManager.setMessage(false, `Произошла ошибка ${response.error}`);
 		};
-	};
-};
+	});
+});
 
 moneyManager.sendMoneyCallback = ((data) => {
 	ApiConnector.transferMoney(data, (response) => {
@@ -80,6 +81,47 @@ moneyManager.sendMoneyCallback = ((data) => {
 		} else {
 			moneyManager.setMessage(false, `Произошла ошибка ${response.error}`);
 		};
+	});
+});
+
+//Заполнить список избранного
+let favoritesWidget = new FavoritesWidget();
+
+ApiConnector.getFavorites((response) => {
+	if (response.success) {
+		favoritesWidget.clearTable();
+		favoritesWidget.fillTable(response.data);
+		moneyManager.updateUsersList(response.data);
 	};
-};
+});
+
+favoritesWidget.addUserCallback = ((data) => {
+	ApiConnector.addUserToFavorites(data, (response) => {
+		if (response.success) {
+			favoritesWidget.clearTable();
+			favoritesWidget.fillTable(response.data);
+			moneyManager.updateUsersList(response.data);
+			favoritesWidget.setMessage(true, 'Пользователь был успешно добавлен.');
+		} else {
+			favoritesWidget.setMessage(false, `Произошла ошибка ${response.error}`);
+
+		};
+	});
+});
+
+
+favoritesWidget.removeUserCallback = ((data) => {
+	ApiConnector.removeUserFromFavorites(data, (response) => {
+		if (response.success) {
+			favoritesWidget.clearTable();
+			favoritesWidget.fillTable(response.data);
+			moneyManager.updateUsersList(response.data);
+			favoritesWidget.setMessage(true, 'Пользователь был успешно добавлен.');
+		} else {
+			favoritesWidget.setMessage(false, `Произошла ошибка ${response.error}`);
+		};
+	});
+});
+
+
 
