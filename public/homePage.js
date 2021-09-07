@@ -4,7 +4,7 @@ let logoutButton = new LogoutButton;
 
 //Разлогинивание
 logoutButton.action = () => {
-	ApiConnector.logout((response) => {   // response ???
+	ApiConnector.logout((response) => {
 		if (response.success) {
 			location.reload();
 		} else {
@@ -14,20 +14,13 @@ logoutButton.action = () => {
 };
 
 //Профиль текущего пользователя
-let current = ApiConnector.current((response) => {  // response ???
+let current = ApiConnector.current((response) => {
 	if (response.success) {
-		ProfileWidget.showProfile(response.data);  // это не поняла response.data
+		ProfileWidget.showProfile(response.data);
 	} else {
 		console.error('Ошибка вывода профиля');
 	};
 });
-
-
-
-
-// Пока остановлюсь... Сдам что есть... 
-
-
 
 //Получение курсов валют и построение таблицы
 let ratesBoard = new RatesBoard;
@@ -46,7 +39,6 @@ function getCurrencyRate() {
 getCurrencyRate();
 
 setInterval(getCurrencyRate(), 60000);
-
 
 
 let moneyManager = MoneyManager;
@@ -84,7 +76,7 @@ moneyManager.sendMoneyCallback = ((data) => {
 	});
 });
 
-//Заполнить список избранного
+//Работа со списком избранного
 let favoritesWidget = new FavoritesWidget();
 
 ApiConnector.getFavorites((response) => {
@@ -108,7 +100,6 @@ favoritesWidget.addUserCallback = ((data) => {
 		};
 	});
 });
-
 
 favoritesWidget.removeUserCallback = ((data) => {
 	ApiConnector.removeUserFromFavorites(data, (response) => {
